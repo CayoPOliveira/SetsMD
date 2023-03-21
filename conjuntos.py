@@ -20,8 +20,8 @@ def simetrica(relacao):
     # Função para verificar se uma relação é simétrica
     for (a, b) in relacao:
         if (b, a) not in relacao:
-            return ""
-    return "S"
+            return False
+    return True
 
 
 def transitiva(relacao):
@@ -29,66 +29,68 @@ def transitiva(relacao):
     for (a, b) in relacao:
         for (c, d) in relacao:
             if b == c and (a, d) not in relacao:
-                return ""
-    return "T"
+                return False
+    return True
 
 
 def reflexiva(relacao, A):
     # Verifica se uma relação é reflexiva
     for a in A:
         if (a, a) not in relacao:
-            return ""
-    return "R"
+            return False
+    return True
 
 
 def equivalencia(relacao):
     # Funções para verificar se uma relação é equivalência
-    if reflexiva(relacao) == "" or simetrica(relacao) == "" or transitiva(relacao) == "":
-        return ""
-    return "E"
+    if reflexiva(relacao) == False or simetrica(relacao) == False or transitiva(relacao) == False:
+        return False
+    return True
 
 
 def equivalencia2(R, S, T):
     # Funções para verificar se uma relação é equivalência
-    if R == "" or S == "" or T == "":
-        return ""
-    return "E"
+    if R == False or S == False or T == False:
+        return False
+    return True
 
 
 def irreflexiva(relacao, A):
     # Verifica se uma relação é irreflexiva
     for a in A:
         if (a, a) in relacao:
-            return ""
-    return "I"
+            return False
+    return True
 
 
-def funcao(relacao):
+def funcao(relacao, A):
     # Verifica se é uma função, cada domínio só pode ter uma imagem
-    if len(set(a for (a, b) in relacao for (c, d) in relacao if a == c and b != d)) != 0:
-        return ""
-    return "Fu"
+    B = [a for (a, b) in relacao]
+    if len(B) != len(A) or len(B) != len(set(B)):
+        return False
+    return True
 
 
-def fInjetora(relacao, Fu):
+def fInjetora(relacao, A):
     # Verifica se é uma função injetora, cada imagem só pode ter um domínio
-    if Fu == "" or len(set((a, c, b) for (a, b) in relacao for (c, d) in relacao if a != c and b == d)) != 0:
-        return ""
-    return "Fi"
+    if funcao(relacao, A) == False or len(set(a for (a, b) in relacao for (c, d) in relacao if a != c and b == d)) != 0:
+        return False
+    return True
 
 
-def fBijetora(relacao, A, Fu):
-    # Verifica se é uma função bijetora, todas os elementos de A estão contidos na imagem
-    if Fu == "" or len(set(b for (a, b) in relacao)) != len(A):
-        return ""
-    return "Fb"
-
-
-def fSobrejetora(relacao, A, Fu):
+def fSobrejetora(relacao, A):
     # Verifica se é uma função sobrejetora, injetora e bijetora
-    if fInjetora(relacao, Fu) == "" or fBijetora(relacao, A, Fu) == "":
-        return ""
-    return "Fs"
+    B = [b for (a, b) in relacao]
+    if funcao(relacao, A) == False or len(B) != len(A) or len(B) != len(set(B)):
+        return False
+    return True
+
+
+def fBijetora(relacao, A):
+    # Verifica se é uma função bijetora, todas os elementos de A estão contidos na imagem
+    if fInjetora(relacao, A) == False or fSobrejetora(relacao, A) == False:
+        return False
+    return True
 
 
 def defRelacoes(A, arquivo):
@@ -97,20 +99,34 @@ def defRelacoes(A, arquivo):
     with open(arquivo, 'w') as file:
         iniciar_contador()
         for i in range(2**(n**2)):
-            Poti = {(j//n, j % n) for j in range(n**2) if i & 1 << j != 0}
+            Poti = {(A[j//n], A[j % n])
+                    for j in range(n**2) if i & 1 << j != 0}
+            str = ""
             S = simetrica(Poti)
+            if S:
+                str += "S"
             T = transitiva(Poti)
+            if T:
+                str += "T"
             R = reflexiva(Poti, A)
-            E = equivalencia2(R, S, T)
-            I = irreflexiva(Poti, A)
-            Fu = funcao(Poti)
-            Fi = fInjetora(Poti, Fu)
-            Fb = fBijetora(Poti, A, Fu)
-            Fs = fSobrejetora(Poti, A, Fu)
+            if R:
+                str += "R"
+            if equivalencia2(R, S, T):
+                str += "E"
+            if irreflexiva(Poti, A):
+                str += "I"
+            if funcao(Poti, A):
+                str += "Fu"
+            if fInjetora(Poti, A):
+                str += "Fi"
+            if fBijetora(Poti, A):
+                str += "Fb"
+            if fSobrejetora(Poti, A):
+                str += "Fs"
 
             if Poti == set():
                 Poti = "{}"
-            file.write(f"{Poti} {S}{T}{R}{E}{I}{Fu}{Fi}{Fb}{Fs}\n")
+            file.write(f"{Poti} {str}\n")
         time = terminar_contador()
     return time
 
@@ -134,3 +150,5 @@ if __name__ == "__main__":
     plt.xticks(range(1, n + 1))
 
     plt.savefig('TimexN.svg', bbox_inches='tight')
+    with open("Tempos.txt", 'w') as fileTime:
+        fileTime.write(str(Times))
