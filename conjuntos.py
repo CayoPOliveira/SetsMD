@@ -155,6 +155,7 @@ def Tarefa01():
 
 
 def repMatriz(A, R):
+    # A partir de uma relação R de um conjunto A é montado e retornada a matriz de zero-um que representa os pares ordenados de R
     n = len(A)
     MatrizR = [[0 for i in range(n)] for j in range(n)]
     for (i, j) in R:
@@ -163,6 +164,7 @@ def repMatriz(A, R):
 
 
 def fechoReflexivo(MatrizR):
+    # Calcula o fecho reflexivo a partir de uma matrizR
     FR = [[e for e in l] for l in MatrizR]
     for i in range(len(FR)):
         FR[i][i] = 1
@@ -170,6 +172,7 @@ def fechoReflexivo(MatrizR):
 
 
 def fechoSimetrico(MatrizR):
+    # Calcula o fecho simétrico a partir de uma matrizR
     FS = [[e for e in l] for l in MatrizR]
     for i in range(len(FS)):
         for j in range(len(FS[i])):
@@ -179,6 +182,7 @@ def fechoSimetrico(MatrizR):
 
 
 def compose(A, B):
+    # Faz a composição de duas matrizes zero-um
     if len(A) != len(B):
         return []
     M = []
@@ -196,6 +200,7 @@ def compose(A, B):
 
 
 def fechoTransitivoRosen(MatrizR, debug=False):
+    # Calcula o fecho transitivo a partir de uma matrizR usando o algoritmo descrito na página 550 do livro do Rosen
     Mr = [[e for e in l] for l in MatrizR]
     FT = [[e for e in l] for l in MatrizR]
     if debug == True:
@@ -212,6 +217,7 @@ def fechoTransitivoRosen(MatrizR, debug=False):
 
 
 def fechoTransitivoWarshall(MatrizR):
+    # Calcula o fecho transitivo a partir de uma matrizR usando o algoritmo de Warshal descrito na página 553 do livro do Rosen
     W = [[e for e in l] for l in MatrizR]
     for k in range(len(W)):
         for i in range(len(W)):
@@ -222,10 +228,13 @@ def fechoTransitivoWarshall(MatrizR):
 
 
 def menorREquivalencia(MatrizR):
+    # Calcula o fecho de equivalência de uma matrizR
     return fechoTransitivoWarshall(fechoSimetrico(fechoReflexivo(MatrizR)))
 
 
 def imprimeParesOrdenados(A, MatrizR, prt=True):
+    # Imprime uma lista de pares ordenados representados em uma matriz de zero-um
+    # @arg prt - Pode ser definido para False então a função apenas retornará a lista sem imprimir
     paresR = [(A[i], A[j]) for i in range(len(MatrizR))
               for j in range(len(MatrizR[i])) if MatrizR[i][j] == 1]
     if prt:
@@ -237,21 +246,27 @@ def Tarefa02():
     A = [0, 1, 2]
     R = [(0, 0), (0, 2), (1, 1), (2, 0), (2, 1)]
     print(f"A = {A}\nR = {R}")
+
     M = repMatriz(A, R)
     print(f"M = {M}")
     print(f"M = {imprimeParesOrdenados(A, M, False)}")
+
     FR = fechoReflexivo(M)
     FR = imprimeParesOrdenados(A, FR, False)
     print(f"({reflexiva(set(FR), A)})FR = {FR}")
+
     FS = fechoSimetrico(M)
     FS = imprimeParesOrdenados(A, FS, False)
     print(f"({simetrica(set(FS))})FS = {FS}")
+
     FT = fechoTransitivoRosen(M)
     FT = imprimeParesOrdenados(A, FT, False)
     print(f"({transitiva(set(FT))})FT = {FT}")
+
     FTW = fechoTransitivoWarshall(M)
     FTW = imprimeParesOrdenados(A, FTW, False)
     print(f"({transitiva(set(FTW))})FTW = {FTW}")
+
     FE = menorREquivalencia(M)
     FE = imprimeParesOrdenados(A, FE, False)
     print(f"({equivalencia(set(FE), A)})FE = {FE}")
