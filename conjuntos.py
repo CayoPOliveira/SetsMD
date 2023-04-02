@@ -229,7 +229,7 @@ def fechoTransitivoWarshall(MatrizR):
 
 def menorREquivalencia(MatrizR):
     # Calcula o fecho de equivalência de uma matrizR
-    return fechoTransitivoWarshall(fechoSimetrico(fechoReflexivo(MatrizR)))
+    return fechoSimetrico(fechoReflexivo(fechoTransitivoWarshall(MatrizR)))
 
 
 def imprimeParesOrdenados(A, MatrizR, prt=True):
