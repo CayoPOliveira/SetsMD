@@ -41,9 +41,9 @@ def reflexiva(relacao, A):
     return True
 
 
-def equivalencia(relacao):
+def equivalencia(relacao, A):
     # Funções para verificar se uma relação é equivalência
-    if reflexiva(relacao) == False or simetrica(relacao) == False or transitiva(relacao) == False:
+    if reflexiva(relacao, A) == False or simetrica(relacao) == False or transitiva(relacao) == False:
         return False
     return True
 
@@ -131,7 +131,7 @@ def defRelacoes(A, arquivo):
     return time
 
 
-if __name__ == "__main__":
+def Tarefa01():
     n = 5
     A = []
     Times = []
@@ -152,3 +152,110 @@ if __name__ == "__main__":
     plt.savefig('TimexN.svg', bbox_inches='tight')
     with open("Tempos.txt", 'w') as fileTime:
         fileTime.write(str(Times))
+
+
+def repMatriz(A, R):
+    n = len(A)
+    MatrizR = [[0 for i in range(n)] for j in range(n)]
+    for (i, j) in R:
+        MatrizR[i][j] = 1
+    return MatrizR
+
+
+def fechoReflexivo(MatrizR):
+    FR = [[e for e in l] for l in MatrizR]
+    for i in range(len(FR)):
+        FR[i][i] = 1
+    return FR
+
+
+def fechoSimetrico(MatrizR):
+    FS = [[e for e in l] for l in MatrizR]
+    for i in range(len(FS)):
+        for j in range(len(FS[i])):
+            if FS[i][j] == 1:
+                FS[j][i] = 1
+    return FS
+
+
+def compose(A, B):
+    if len(A) != len(B):
+        return []
+    M = []
+    for i in range(len(A)):
+        Li = []
+        for j in range(len(A)):
+            put = 0
+            for k in range(len(A)):
+                if A[i][k] == B[k][j] and A[i][k] == 1:
+                    put = 1
+                    break
+            Li.append(put)
+        M.append(Li)
+    return M
+
+
+def fechoTransitivoRosen(MatrizR, debug=False):
+    Mr = [[e for e in l] for l in MatrizR]
+    FT = [[e for e in l] for l in MatrizR]
+    if debug == True:
+        print(f"Mr1 = {Mr}")
+    for e in range(1, len(MatrizR)):
+        Mr = compose(Mr, MatrizR)
+        if debug == True:
+            print(f"Mr{e+1} = {Mr}")
+        for i in range(len(Mr)):
+            for j in range(len(Mr[i])):
+                if Mr[i][j] == 1:
+                    FT[i][j] = 1
+    return FT
+
+
+def fechoTransitivoWarshall(MatrizR):
+    W = [[e for e in l] for l in MatrizR]
+    for k in range(len(W)):
+        for i in range(len(W)):
+            for j in range(len(W[i])):
+                if W[i][j] == 0 and (W[i][k] == 1 and W[k][j] == 1):
+                    W[i][j] = 1
+    return W
+
+
+def menorREquivalencia(MatrizR):
+    return fechoTransitivoWarshall(fechoSimetrico(fechoReflexivo(MatrizR)))
+
+
+def imprimeParesOrdenados(A, MatrizR, prt=True):
+    paresR = [(A[i], A[j]) for i in range(len(MatrizR))
+              for j in range(len(MatrizR[i])) if MatrizR[i][j] == 1]
+    if prt:
+        print(paresR)
+    return paresR
+
+
+def Tarefa02():
+    A = [0, 1, 2]
+    R = [(0, 0), (0, 2), (1, 1), (2, 0), (2, 1)]
+    print(f"A = {A}\nR = {R}")
+    M = repMatriz(A, R)
+    print(f"M = {M}")
+    print(f"M = {imprimeParesOrdenados(A, M, False)}")
+    FR = fechoReflexivo(M)
+    FR = imprimeParesOrdenados(A, FR, False)
+    print(f"({reflexiva(set(FR), A)})FR = {FR}")
+    FS = fechoSimetrico(M)
+    FS = imprimeParesOrdenados(A, FS, False)
+    print(f"({simetrica(set(FS))})FS = {FS}")
+    FT = fechoTransitivoRosen(M)
+    FT = imprimeParesOrdenados(A, FT, False)
+    print(f"({transitiva(set(FT))})FT = {FT}")
+    FTW = fechoTransitivoWarshall(M)
+    FTW = imprimeParesOrdenados(A, FTW, False)
+    print(f"({transitiva(set(FTW))})FTW = {FTW}")
+    FE = menorREquivalencia(M)
+    FE = imprimeParesOrdenados(A, FE, False)
+    print(f"({equivalencia(set(FE), A)})FE = {FE}")
+
+
+if __name__ == "__main__":
+    Tarefa02()
