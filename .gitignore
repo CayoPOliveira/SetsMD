@@ -1,5 +1,6 @@
 Tests
 
-.vscode
+.*
+__*
 
 ClassFiles

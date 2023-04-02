@@ -1,8 +1,8 @@
 <!-- @format -->
 
-# ConjuntosMD
+# Códigos referẽntes a trabalhos da disciplina Matemática Discreta
 
-## Objetivo
+## Conjuntos: objetivo
 
 Considere o conjunto A = {1, 2, 3, 4, 5}.
 Faça um programa para classificar todas as 33.554.432 relações binárias no conjunto A.
@@ -34,7 +34,7 @@ A resposta deve ser retornada em um arquivo texto, da forma como o exemplo:
 
 Determine o tempo em que cada teste foi executado e o tamanho do arquivo texto resultado.
 
-## Executando
+## Conjuntos: executando
 
 Para executar o programa é nescessário python 3, você pode instala-lo com o seguinte comando:
 
@@ -60,12 +60,42 @@ Por fim, para executar o programa utilize o comando:
 python3 conjuntos.py
 ```
 
-Em alguns casos o comando certo será
+## Conjuntos: Sobre o código
+
+Como o programa descrevia foi executado e criado os arquivos para um conjunto de 5 elementos, porém foi expandida a simulação para observar o crescimento exponencial do problema e gerar um gráfico, alterando o valor de **n** na linha 135 do arquivo [conjuntos.py](conjuntos.py), para fins de teste não recomendo executar a partir de 6 elementos a menos que a máquina de testes possua boas configurações.
+
+## Relações: objetivo
+
+Fechamento Reflexivo, Simétrico e Transitivo. Faça a implementação de funções que:
+
+1. Recebe um conjunto A, como lista, e uma relação R, como lista de pares ordenados com elementos em A, retornando a representação matricial de R.
+2. Recebe a representação matricial de uma relação binária R em um
+   conjunto finito e retorna a matriz que representa o fechamento
+   reflexivo dessa relação R;
+3. Recebe a representação matricial de uma relação binária R em um
+   conjunto finito e retorna a matriz que representa o fechamento
+   simétrico dessa relação R;
+4. Recebe a representação matricial de uma relação binária R em um
+   conjunto finito e retorna a matriz que representa o fechamento
+   transitivo dessa relação R, usando o algoritmo 1, página 550, livro
+   do Rosen;
+5. Recebe a representação matricial de uma relação binária R em um
+   conjunto finito e retorna a matriz que representa o fechamento
+   transitivo dessa relação R, usando o algoritmo de Warshall.
+6. Recebe a representação matricial de uma relação binária R em um
+   conjunto finito e retorna a matriz que representa a menor relação
+   de equivalência que contêm essa relação R.
+7. Recebe um conjunto A, como lista, e a representação matricial de R,
+   imprimindo a relação R como pares ordenados.
+
+## Relações: executando
+
+Para executar o programa é nescessário python 3, e para executar o programa utilize o comando:
 
 ```
-python conjuntos.py
+python3 relacoes.py
 ```
 
-## Sobre o código
+## Relações: Sobre o código
 
-Como o programa descrevia foi executado e criado os arquivos para um conjunto de 5 elementos, porém foi expandida a simulação para observar o crescimento exponencial do problema e gerar um gráfico, alterando o valor de **n** na linha 119 do arquivo [conjuntos.py](conjuntos.py), para fins de teste não recomendo executar a partir de 6 elementos a menos que a máquina de testes possua boas configurações.
+O programa gera a vizualização da matriz zero-um da relação, e a partir dela gera o Fecho Reflexivo, Simétrico e Transitivo, também a menor relação de equivalência, a partir disso faz os testes das relações usando os algoritmos desenvolvidos no programa [conjuntos.py](./conjuntos.py)
